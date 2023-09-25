@@ -1,0 +1,429 @@
+#:import Factory kivy.factory.Factory
+
+ScreenManager:
+    id: screen_manager
+    MenuScreen:
+        id: menu_screen
+        name: 'Меню'
+        manager: screen_manager
+    SearchScreen:
+        id: search_screen
+        name: 'Поиск'
+        manager: screen_manager
+    StatisticScreen:
+        id: statistic_screen
+        name: 'Статистика'
+        manager: screen_manager
+    HelpScreen:
+        id: help_screen
+        name: 'Справка'
+        manager: screen_manager
+
+
+
+
+
+
+<MenuScreen>
+
+    BoxLayout:
+        padding: 25, 0, 0, 0
+
+        BoxLayout:
+            orientation: "vertical"
+            padding: 150, 150, 150, 150
+            spacing: 20
+
+            Button:
+                background_color: 0.92, 0.75, 1
+                background_normal: ''
+                on_release: Factory.DownloadPopup().open()
+                color: 0.34, 0.14, 0.43
+                text: "Загрузка ресурсов"
+                font_size: 24
+                disabled: False
+
+            Button:
+                background_color: 0.92, 0.75, 1
+                background_normal: ''
+                color: 0.34, 0.14, 0.43
+                text: "Поиск"
+                font_size: 24
+                disabled: False
+                on_press: root.manager.current = 'Поиск'
+
+            Button:
+                background_color: 0.92, 0.75, 1
+                background_normal: ''
+                color: 0.34, 0.14, 0.43
+                text: "Статистика"
+                font_size: 24
+                disabled: False
+                on_release: root.manager.current = 'Статистика'
+                on_press: app.count_statistica()
+
+            Button:
+                background_color: 0.92, 0.75, 1
+                background_normal: ''
+                color: 0.34, 0.14, 0.43
+                text: "Справка"
+                font_size: 24
+                disabled: False
+                on_press: root.manager.current = 'Справка'
+
+
+<HelpScreen>
+    BoxLayout:
+        orientation: "vertical"
+        padding: 20
+
+        Label:
+            font_size: 20
+            text: " Данное приложения является информационно-поисковой системой.  \n * для загрузки информационных ресурсов выберите режим -  загрузка ресурсов, \n      где необходимо через запятую указать url ресурсов  \n * для поиска выберите режим -  поиск,  \n      где необходимо сформулировать логический запрос, \n      используя символы !, +, \, (, ). Каждое слово необходимо звять в одинарные кавычки,\n      каждую унарную и бинарную операцию необходимо заключить в скобки.\n      Примеры: \n        'food'\n        ('food' + 'water')\n        ((!'food') / 'glad')\n      В результате поиска отобразятся все релевантные по мнению системы ресурсы,\n      количество релевантных по вашему мнению ресурсов можно сохранить для оценки качества ИПС.\n* для просмотра значений метрик оценки качества выберите режим -  статистика,\n      где будет представлены такие характеристики, как recall, precision, accuracy, fmeasure, error."
+
+            size_hint: 1, .18
+            color: 0.34, 0.14, 0.43
+
+        Label:
+            id: label
+            font_size: 20
+            text: ""
+            size_hint: 1, .18
+            color: 0, .26, .41, 1
+
+        Button:
+            size_hint: 1, .05
+            text: "Назад"
+            font_size: 20
+            disabled: False
+            on_press: root.manager.current = 'Меню'
+            color: 0.34, 0.14, 0.43
+            background_color: 0.92, 0.75, 1
+            background_normal: ''
+
+<SearchScreen>:
+    BoxLayout:
+        orientation: "horizontal"
+        padding: 20
+        spacing: 20
+
+
+        BoxLayout:
+            orientation: "vertical"
+
+
+            Label:
+                id: label
+                font_size: 20
+                text: "Введите поисковой запрос"
+                color: 0, .26, .41, 1
+                size_hint: 1, .07
+
+            TextInput:
+                id: question
+                multiline: True
+                text: ""
+                size_hint: 1, .07
+
+            Label:
+                id: label
+                font_size: 20
+                text: ""
+                color: 0, .26, .41, 1
+                size_hint: 1, .04
+
+
+            Button:
+                text: "Поиск"
+                font_size: 20
+                disabled: False
+                on_press: app.search(question)
+                color: 0.34, 0.14, 0.43
+                background_color: 0.92, 0.75, 1
+                background_normal: ''
+                size_hint: 1, .07
+
+
+            GridLayout:
+                size_hint: 1, .7
+                cols: 3
+                id: res
+                padding: 10
+                spacing: 10
+
+            BoxLayout:
+                padding: 5
+                spacing: 5
+                size_hint: 1, .07
+
+                Button:
+                    color: 0, 0, 0, 1
+                    text: "<-"
+                    font_size: 14
+                    disabled: False
+                    on_press: app.to_x_page(current_page, '-')
+                    color: 0.34, 0.14, 0.43
+                    background_color: 0.92, 0.75, 1
+                    background_normal: ''
+
+                Button:
+                    color: 0, 0, 0, 1
+                    text: "1"
+                    font_size: 14
+                    disabled: False
+                    on_press: app.to_first_page(current_page)
+                    color: 0.34, 0.14, 0.43
+                    background_color: 0.92, 0.75, 1
+                    background_normal: ''
+
+                Label:
+                    id: current_page
+                    font_size: 20
+                    text: "1"
+                    color: 0.34, 0.14, 0.43
+
+                Button:
+                    id: last_page
+                    color: 0, 0, 0, 1
+                    text: "1"
+                    font_size: 14
+                    disabled: False
+                    on_press: app.to_last_page(current_page)
+                    color: 0.34, 0.14, 0.43
+                    background_color: 0.92, 0.75, 1
+                    background_normal: ''
+
+                Button:
+                    color: 0, 0, 0, 1
+                    text: "->"
+                    font_size: 14
+                    disabled: False
+                    on_press: app.to_x_page(current_page, '+')
+                    color: 0.34, 0.14, 0.43
+                    background_color: 0.92, 0.75, 1
+                    background_normal: ''
+                    radius: [40]
+
+
+        BoxLayout:
+            orientation: "vertical"
+            size_hint: 0.3, 1
+
+
+            Label:
+                id: number_record
+                size_hint: 1, .1
+                text: "Кол-во записей: 0"
+                color: 0.34, 0.14, 0.43, 1
+
+            Label:
+                size_hint: 1, .1
+                text: "Кол-во на страницу: 10"
+                color: 0.34, 0.14, 0.43, 1
+
+
+            Label:
+                size_hint: 1, .1
+                text: "Кол-во релевантных:"
+                color: 0.34, 0.14, 0.43, 1
+
+            TextInput:
+                id: kol_rel
+                size_hint: 1, .1
+                multiline: False
+                text: ""
+
+            Label:
+                size_hint: 1, .1
+                text: ""
+                color: 0.34, 0.14, 0.43, 1
+
+            Button:
+                size_hint: 1, .1
+                text: "Сохранить"
+                font_size: 20
+                disabled: False
+                on_press: app.save_statistic(kol_rel)
+                color: 0.34, 0.14, 0.43
+                background_color: 0.92, 0.75, 1
+                background_normal: ''
+
+            Label:
+                size_hint: 1, .1
+                text: ""
+                color: 0.34, 0.14, 0.43, 1
+
+            Button:
+                size_hint: 1, .1
+                text: "Сбросить"
+                font_size: 20
+                disabled: False
+                on_press: app.clear_search_screen()
+                color: 0.34, 0.14, 0.43
+                background_color: 0.92, 0.75, 1
+                background_normal: ''
+
+
+
+            Label:
+                size_hint: 1, .1
+                text: "Поиск с синонимами"
+                color: 0.34, 0.14, 0.43, 1
+
+            CheckBox:
+                active: "down"
+                on_active: app.change_active()
+
+
+            Widget:
+                text: ""
+
+            Button:
+                size_hint: 1, .1
+                text: "Назад"
+                font_size: 20
+                disabled: False
+                on_press: app.clear_search_screen()
+                on_release: root.manager.current = 'Меню'
+                color: 0.34, 0.14, 0.43
+                background_color: 0.92, 0.75, 1
+                background_normal: ''
+
+
+
+
+
+
+
+
+
+<DownloadPopup@Popup>:
+    background: ''
+    background_color: 0.92, 0.75, 1, 1
+    title_color: 0.34, 0.14, 0.43
+    auto_dismiss: False
+    title: "Загрузка ресурсов"
+    size_hint: .5, .5
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: 10
+
+        Label:
+            font_size: 20
+            text: "Введите ссылки через запятую"
+            size_hint: 1, .18
+            color: 0.34, 0.14, 0.43
+
+        TextInput:
+            id: edit_form
+            size_hint: 1, .5
+            multiline: True
+            text: ""
+
+        Label:
+            id: label
+            font_size: 20
+            text: ""
+            size_hint: 1, .05
+            color: 0, .26, .41, 1
+
+
+        Button:
+            size_hint: 1, .1
+            text: "Загрузить"
+            font_size: 20
+            disabled: False
+            on_press: app.download_sources(edit_form)
+            color: 0.34, 0.14, 0.43
+            background_color: 0.82, 0.43, 1, 1
+            background_normal: ''
+
+        Label:
+            id: label
+            font_size: 20
+            text: ""
+            size_hint: 1, .1
+            color: 0, .26, .41, 1
+
+        Button:
+            size_hint: 1, .1
+            text: "Закрыть"
+            font_size: 20
+            disabled: False
+            on_press:root.dismiss()
+            color: 0.34, 0.14, 0.43
+            background_color: 0.82, 0.43, 1, 1
+            background_normal: ''
+
+
+<StatisticScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        padding: 10
+        spacing: 10
+
+
+        Label:
+            font_size: 20
+            text: "Статистика для набора запросов"
+            size_hint: 1, .1
+            color: 0, .26, .41, 1
+
+
+        Label:
+            id: recall
+            font_size: 20
+            text: "recall"
+            size_hint: 1, .1
+            color: 0, .26, .41, 1
+
+
+        Label:
+            id: precision
+            font_size: 20
+            text: "preciton"
+            size_hint: 1, .1
+            color: 0, .26, .41, 1
+
+        Label:
+            id: accuracy
+            font_size: 20
+            text: "accuracy"
+            size_hint: 1, .1
+            color: 0, .26, .41, 1
+
+
+        Label:
+            id: fmeasure
+            font_size: 20
+            text: "fmeasure"
+            size_hint: 1, .1
+            color: 0, .26, .41, 1
+
+
+        Label:
+            id: error
+            font_size: 20
+            text: "error"
+            size_hint: 1, .1
+            color: 0, .26, .41, 1
+
+
+
+        Label:
+            id: label
+            font_size: 20
+            text: ""
+            size_hint: 1, .07
+            color: 0, .26, .41, 1
+
+        Button:
+            size_hint: 1, .1
+            text: "Закрыть"
+            font_size: 20
+            disabled: False
+            on_press: root.manager.current = 'Меню'
+            color: 0.34, 0.14, 0.43
+            background_color: 0.92, 0.75, 1
+            background_normal: ''
